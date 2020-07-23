@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "415331448278",
+    "firebase_url": "https://lokalegrocery.firebaseio.com",
+    "project_id": "lokalegrocery",
+    "storage_bucket": "lokalegrocery.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:415331448278:android:8dc9cf970aee5e07dde077",
+        "android_client_info": {
+          "package_name": "com.grocerry.local.lokalegrocery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "415331448278-d2fkaehf2lnmf0nqco0njhg3cvftcihl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.grocerry.local.lokalegrocery",
+            "certificate_hash": "0df7d6827af0bca93901f475274d0ce70d7c472b"
+          }
+        },
+        {
+          "client_id": "415331448278-tfekk2ur9bjhc0uddopgaqtulf2v58f7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcNHbazfzxXjyn_bK0UnnuJpd6QJs75sI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "415331448278-tfekk2ur9bjhc0uddopgaqtulf2v58f7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
