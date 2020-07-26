@@ -40,6 +40,7 @@ public class UserPage extends AppCompatActivity {
         welcomeText = (TextView)findViewById(R.id.welcomeText);
         if(!(null == customerName)) {
             welcomeText.setText("Welcome " + customerName + "datat from sharedPreferencesconfig::"+address);
+            sharedPreferencesConfig.writeLoginStatus(true);
         }else{
             welcomeText.setText("Welcome Anonymous User");
         }
@@ -50,6 +51,7 @@ public class UserPage extends AppCompatActivity {
                     public void onClick(View view) {
                         firebaseAuth.signOut();
                         Intent intent = new Intent(UserPage.this,LoginActivity.class);
+                        sharedPreferencesConfig.clearSharedPreferenceObject();
                         startActivity(intent);
                     }
                 }

@@ -22,6 +22,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.grocerry.local.lokalegrocery.configuration.SharedPreferencesConfig;
 import com.grocerry.local.lokalegrocery.firebaseAccessLayer.CustomerInformationDAO;
 import com.grocerry.local.lokalegrocery.models.CustomerInformation;
+import com.grocerry.local.lokalegrocery.models.FireBaseUserStatus;
 import com.grocerry.local.lokalegrocery.models.PhoneObject;
 
 import java.util.concurrent.TimeUnit;
@@ -44,6 +45,7 @@ public class PhoneVerification extends AppCompatActivity {
 
     SharedPreferencesConfig sharedPrefConfig;
 
+    FireBaseUserStatus fireBaseUserStatus = new FireBaseUserStatus();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,8 @@ public class PhoneVerification extends AppCompatActivity {
         //phoneObject.setCustomerID("Cust".concat(mobile));
         //phoneObject.setCustomerPhoneNumber(mobile);
         customerInfo.setPhoneNumber(mobile);
-        sendVerificationCode(mobile);
+        verifyUserExistInFireBaseThenRegister(mobile);
+        //sendVerificationCode(mobile);
     }
 
 
@@ -124,13 +127,25 @@ public class PhoneVerification extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     //verification successful we will start the profile activity
-                                    Intent intent = new Intent(PhoneVerification.this, UserRegisterConfirmation.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    customerInformationDAO.createNewCustomer(customerInfo.getPhoneNumber(),customerInfo);
 
-                                    //intent.putExtra("mobile", mobile);
-                                    sharedPrefConfig.storeDataInData("phoneNumber",mobile);
-                                    startActivity(intent);
+                                    fireBaseUserStatus = customerInformationDAO.readCustomerInformation(mobile);
+                                    if(fireBaseUserStatus.getUserExist()){
+                                        sharedPrefConfig.storeDataInData("phoneNumber",fireBaseUserStatus.getCustomerInformation().getPhoneNumber());
+                                        sharedPrefConfig.storeDataInData("customerName",fireBaseUserStatus.getCustomerInformation().getCustomerName());
+                                        sharedPrefConfig.storeDataInData("customerAddress",fireBaseUserStatus.getCustomerInformation().getCustomerAddress());
+                                        Toast.makeText(PhoneVerification.this,"Customer Already exists. Redirecting to User Page",Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(PhoneVerification.this, UserPage.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    }else {
+                                        Intent intent = new Intent(PhoneVerification.this, UserRegisterConfirmation.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        customerInformationDAO.createNewCustomer(customerInfo.getPhoneNumber(), customerInfo);
+
+                                        //intent.putExtra("mobile", mobile);
+                                        sharedPrefConfig.storeDataInData("phoneNumber", mobile);
+                                        startActivity(intent);
+                                    }
 
                                 } else {
 
@@ -154,6 +169,25 @@ public class PhoneVerification extends AppCompatActivity {
         editor.commit();
     }
 
+    public void verifyUserExistInFireBaseThenRegister(String mobile){
+        fireBaseUserStatus = customerInformationDAO.readCustomerInformation(mobile);
+        if(fireBaseUserStatus.getUserExist()){
+            sharedPrefConfig.storeDataInData("phoneNumber",fireBaseUserStatus.getCustomerInformation().getPhoneNumber());
+            sharedPrefConfig.storeDataInData("customerName",fireBaseUserStatus.getCustomerInformation().getCustomerName());
+            sharedPrefConfig.storeDataInData("customerAddress",fireBaseUserStatus.getCustomerInformation().getCustomerAddress());
+            Toast.makeText(PhoneVerification.this,"Customer Already exists. Redirecting to User Page",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(PhoneVerification.this, UserPage.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(PhoneVerification.this, UserRegisterConfirmation.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            customerInformationDAO.createNewCustomer(customerInfo.getPhoneNumber(), customerInfo);
 
+            //intent.putExtra("mobile", mobile);
+            sharedPrefConfig.storeDataInData("phoneNumber", mobile);
+            startActivity(intent);
+        }
+    }
 
 }

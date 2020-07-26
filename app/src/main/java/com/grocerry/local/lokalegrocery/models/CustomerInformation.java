@@ -9,6 +9,10 @@ public class CustomerInformation {
     String customerName;
     String customerAddress;
 
+    public CustomerInformation(){
+
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -31,5 +35,11 @@ public class CustomerInformation {
 
     public void setCustomerAddress(String customerAddress) {
         this.customerAddress = customerAddress;
+    }
+
+    public CustomerInformation(String phoneNumber,String customerName,String customerAddress){
+        this.phoneNumber = phoneNumber;
+        this.customerName=customerName;
+        this.customerAddress=customerAddress;
     }
 }

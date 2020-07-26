@@ -42,4 +42,11 @@ public class SharedPreferencesConfig {
         sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.user_register_preference),Context.MODE_PRIVATE);
         return sharedPreferences.getString(key,"");// getting default value of String
     }
+
+    public void clearSharedPreferenceObject(){
+        sharedPreferences = context.getSharedPreferences(context.getResources().getString(R.string.user_register_preference),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+    }
 }

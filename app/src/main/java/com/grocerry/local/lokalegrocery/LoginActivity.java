@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -43,6 +44,7 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.*;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.grocerry.local.lokalegrocery.configuration.SharedPreferencesConfig;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -78,12 +80,14 @@ public class LoginActivity extends AppCompatActivity {
     private View mLoginFormView;
 
     DatabaseReference databaseReference;
+    SharedPreferencesConfig sharedPreferencesConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         databaseReference = FirebaseDatabase.getInstance().getReference().child("CustomerInfo");
+        sharedPreferencesConfig = new SharedPreferencesConfig(getApplicationContext());
 
         validateMobilePhone();
     }
@@ -228,7 +232,7 @@ public class LoginActivity extends AppCompatActivity {
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
+        // the progress spinner.//
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
@@ -372,10 +376,10 @@ public class LoginActivity extends AppCompatActivity {
         //initialize fields
         editTextMobile = findViewById(R.id.editTextMobile);
         btnContinue = findViewById(R.id.buttonContinue);
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        //currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //check whether the user is logged in
-        if (currentUser != null) {
+        if (sharedPreferencesConfig.readLoginStatus()) {
             Intent intent = new Intent(LoginActivity.this, UserPage.class);
             startActivity(intent);
             finish();
@@ -385,12 +389,13 @@ public class LoginActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     String mobileNo = editTextMobile.getText().toString().trim();
+                    mobileNo = "91".concat(mobileNo);
 
-                    if (mobileNo.isEmpty() || mobileNo.length() < 12) {
+                    /*if (mobileNo.isEmpty() || mobileNo.length() < 12) {
                         editTextMobile.setError("Enter a valid mobile");
                         editTextMobile.requestFocus();
                         return;
-                    }
+                    }*/
 
                     Intent intent = new Intent(LoginActivity.this, PhoneVerification.class);
                     intent.putExtra("mobile", mobileNo);

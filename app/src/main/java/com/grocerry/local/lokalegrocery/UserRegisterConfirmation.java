@@ -54,6 +54,7 @@ public class UserRegisterConfirmation extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         CustomerInformation customerInformation = readUserRegistrationConfirmationInfo();
+                        customerInformation.setPhoneNumber(sharedPrefConfig.getCustomerInfo("phoneNumber"));
                         customerInformationDAO.createNewCustomer(mobile,customerInformation);
                         Intent intent = new Intent(UserRegisterConfirmation.this, UserPage.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
